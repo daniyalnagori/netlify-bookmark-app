@@ -2,7 +2,7 @@ var faunadb = require("faunadb"),
   q = faunadb.query;
 
 var adminClient = new faunadb.Client({
-  secret: process.env.FAUNADB_SERVER_SECRET,
+  secret: "fnAD4WspdcACAZNBJB4bsHTdWy_AlTBNBabJNXPv",
 });
 
 function getBookmarks() {

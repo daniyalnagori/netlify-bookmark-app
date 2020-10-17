@@ -1,45 +1,46 @@
-const rp = require('request-promise');
-const cheerio = require('cheerio');
-var faunadb = require('faunadb'),
-    q = faunadb.query;
+const rp = require("request-promise");
+const cheerio = require("cheerio");
+var faunadb = require("faunadb"),
+  q = faunadb.query;
 
 var adminClient = new faunadb.Client({
-    secret: process.env.FAUNADB_SERVER_SECRET
+  secret: "fnAD4WspdcACAZNBJB4bsHTdWy_AlTBNBabJNXPv",
 });
 
-
-const getDetails = async function(url) {
-  const data = rp(url).then(function(htmlString) {
+const getDetails = async function (url) {
+  const data = rp(url).then(function (htmlString) {
     const $ = cheerio.load(htmlString);
-    const title = $('head > title').text();
-    const description = $('meta[name="description"]').attr('content');
+    const title = $("head > title").text();
+    const description = $('meta[name="description"]').attr("content");
     return {
       pageTitle: title,
-      description: description
+      description: description,
     };
   });
-  return data
-}
+  return data;
+};
 
-const saveBookmark = async function(details) {
+const saveBookmark = async function (details) {
   const data = {
-    data: details
+    data: details,
   };
-  return adminClient.query(q.Create(q.Collection("links"), data))
+  return adminClient
+    .query(q.Create(q.Collection("links"), data))
     .then((response) => {
       /* Success! return the response with statusCode 200 */
-      console.log("success", response)
+      console.log("success", response);
       return {
         statusCode: 200,
-        body: JSON.stringify(response)
-      }
-    }).catch((error) => {
-      /* Error! return the error with statusCode 400 */
-      return  {
-        statusCode: 400,
-        body: JSON.stringify(error)
-      }
+        body: JSON.stringify(response),
+      };
     })
-}
+    .catch((error) => {
+      /* Error! return the error with statusCode 400 */
+      return {
+        statusCode: 400,
+        body: JSON.stringify(error),
+      };
+    });
+};
 
-export { getDetails, saveBookmark }
+export { getDetails, saveBookmark };
